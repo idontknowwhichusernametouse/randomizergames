@@ -3,7 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="robots" content="noindex">
-  <title>Random Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UNBLOCKED HYPER — Random Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 48px 20px;
+      background: #111;
+      color: white;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      border: 0;
+      border-radius: 8px;
+    }
+    #status { margin-bottom: 18px; }
+  </style>
+</head>
+<body>
+  <p id="status">Choosing a random game...</p>
+  <button id="pick" type="button">Pick another random game</button>
+
   <script>
     const games = [
   "https://sites.google.com/view/unblckedhyper/choppy-orc/",
@@ -406,15 +430,36 @@
   "https://sites.google.com/view/unblckedhyper/ragdoll-achievement/"
 ];
 
-    if (games.length === 0) {
-      document.body.textContent = "No game URLs found.";
-    } else {
-      const randomGame = games[Math.floor(Math.random() * games.length)];
-      window.location.replace(randomGame);
+    function pickRandomGame() {
+      const validGames = games.filter(url => {
+        try {
+          const parsed = new URL(url);
+          return parsed.protocol === "https:" &&
+                 parsed.hostname === "sites.google.com";
+        } catch (error) {
+          return false;
+        }
+      });
+
+      if (validGames.length === 0) {
+        document.getElementById("status").textContent =
+          "No valid game links were found.";
+        return;
+      }
+
+      const randomGame =
+        validGames[Math.floor(Math.random() * validGames.length)];
+
+      document.getElementById("status").textContent =
+        "Opening a random game...";
+
+      window.location.assign(randomGame);
     }
+
+    document.getElementById("pick").addEventListener("click", pickRandomGame);
+
+    // Automatically choose a game when the page loads.
+    pickRandomGame();
   </script>
-</head>
-<body>
-  Redirecting to a random game...
 </body>
 </html>
